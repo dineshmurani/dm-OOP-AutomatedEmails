@@ -11,7 +11,13 @@ class NewsFeed:
     def get(self):
         pass
 
+url = ("https://newsapi.org/v2/everything?"
+       "qInTitle=meditation&"
+       "from=2025-09-25&"
+       "to=2025-09-27&"
+       "language=en&"
+       "apiKey=3586a06025c9449fbd48d8c78c2a9dad")
 
-response = requests.get("https://newsapi.org/v2/everything?q=tesla&from=2025-08-26&sortBy=publishedAt&apiKey=3586a06025c9449fbd48d8c78c2a9dad")
+response = requests.get(url)
 content = response.text
 pprint(content)
