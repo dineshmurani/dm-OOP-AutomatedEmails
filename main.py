@@ -1,39 +1,13 @@
-## Newsapi.org API key 3586a06025c9449fbd48d8c78c2a9dad
-import requests
-from pprint import pprint
+import yagmail
+import pandas
+from news import NewsFeed
 
+df = pandas.read_excel('people.xlsx')
 
-class NewsFeed:
-    """Representing multiple news titles and links as a single string
-    """
-
-    base_url = "https://newsapi.org/v2/everything?"
-    api_key = "3586a06025c9449fbd48d8c78c2a9dad"
-    def __init__(self, interest, from_date, to_date, language):
-        self.interest = interest
-        self.from_date = from_date
-        self.to_date = to_date
-        self.language = language
-
-    def get(self):
-        url = (f"{self.base_url}"
-               f"qInTitle={self.interest}&"
-               f"from={self.from_date}&"
-               f"to={self.to_date}&"
-               f"language={self.language}&"
-               f"apiKey={self.api_key}")
-
-        response = requests.get(url)
-        content = response.json()
-        articles = content['articles']
-
-        email_body = ''
-        for article in articles:
-            email_body = email_body + article['title'] + '\n' + article['url'] + '\n\n'
-
-        return email_body
-
-news_feed = NewsFeed(interest='nasa', from_date='2025-09-25', to_date='2025-09-27', language='en')
-pprint(news_feed.get())
-
+for index, row in df.iterrows():
+    news_feed = NewsFeed(interest=row["interest"], from_date='2025-09-29', to_date='2025-09-30')
+    email = yagmail.SMTP(user='pythoncourse1@gmail.com', password="python_pro_course_1")
+    email.send(to=row['email'],
+               subject=f'Your {row['interest']}  news for today!',
+               contents=f"Hi {row["name"]}\n See what's on about {row["interest"]} Today. \n{news_feed.get()}\nDinesh",)
 
